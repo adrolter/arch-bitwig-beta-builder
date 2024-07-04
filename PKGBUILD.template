@@ -1,0 +1,48 @@
+pkgname=bitwig-studio-beta
+pkgver={{VERSION}}
+pkgrel=0
+pkgdesc="A multi-platform music-creation system for production, remixing and performance with a focus on flexible editing tools and a super-fast workflow."
+arch=('x86_64')
+url="http://bitwig.com"
+depends=('xdg-utils' 'xcb-util-wm' 'libbsd')
+optdepends=('alsa-lib'
+            'jack'
+            'oss'
+            'ffmpeg')
+options=('!strip' '!emptydirs')
+install=${pkgname}.install
+source=("file://{{DEBFILE}}") 
+sha512sums=('SKIP')
+
+package(){
+
+	# Extract package data
+	tar -xI unzstd -f data.tar.zst -C "${pkgdir}"
+	cd "${pkgdir}"
+
+	mv opt/bitwig-studio opt/bitwig-studio-beta
+
+	rm usr/bin/bitwig-studio
+	ln -s /opt/bitwig-studio-beta/bitwig-studio usr/bin/bitwig-studio-beta
+
+	mv usr/share/icons/hicolor/128x128/apps/com.bitwig.BitwigStudio{,-beta}.png
+	mv usr/share/icons/hicolor/48x48/apps/com.bitwig.BitwigStudio{,-beta}.png
+	mv usr/share/icons/hicolor/scalable/apps/com.bitwig.BitwigStudio{,-beta}.svg
+
+	for type in clip device extension impulse modulator module package preset project-folder project remote-controls; do
+		mv usr/share/icons/hicolor/scalable/mimetypes/com.bitwig.BitwigStudio{,-beta}.application-bitwig-${type}.svg
+	done
+	mv usr/share/icons/hicolor/scalable/mimetypes/com.bitwig.BitwigStudio{,-beta}.audio-x.dawproject.svg
+
+	mv usr/share/mime/packages/com.bitwig.BitwigStudio{,-beta}.xml
+
+	mv usr/share/metainfo/com.bitwig.BitwigStudio{,-beta}.appdata.xml
+
+	mv usr/share/applications/com.bitwig.BitwigStudio{,-beta}.desktop
+	sed -i 's/Name=Bitwig Studio/Name=Bitwig Studio Beta/' usr/share/applications/com.bitwig.BitwigStudio-beta.desktop
+	sed -i 's/Exec=bitwig-studio/Exec=bitwig-studio-beta/' usr/share/applications/com.bitwig.BitwigStudio-beta.desktop
+	sed -i 's/Icon=com.bitwig.BitwigStudio/Icon=com.bitwig.BitwigStudio-beta/' usr/share/applications/com.bitwig.BitwigStudio-beta.desktop
+
+	install -D -m644 "opt/bitwig-studio-beta/resources/icons/license_limit_warning.svg" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	install -D -m644 "opt/bitwig-studio-beta/EULA.txt" "${pkgdir}/usr/share/licenses/${pkgname}/EULA"
+}
