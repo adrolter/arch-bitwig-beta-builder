@@ -2,6 +2,9 @@
 
 cd "$(dirname "$(readlink -f "$0")")"
 
+rm *.deb
+rm *.pkg.tar.zst
+
 file="$(find ~/Downloads -type f -name "bitwig-studio-*-beta-*.deb" -printf "%T@ %p\n" | sort -nr | cut -d' ' -f2 | head -n1)"
 version="$(echo $file | perl -ne '/\/bitwig-studio-(.+)-beta-(.+)\.deb$/ && print "$1beta$2"')"
 
@@ -13,4 +16,4 @@ cp -a PKGBUILD.template PKGBUILD
 perl -pi -e 's/{{VERSION}}/$ENV{BITWIG_BETA_VERSION}/g;' PKGBUILD
 perl -pi -e 's/{{DEBFILE}}/$ENV{BITWIG_BETA_DEBFILE}/g;' PKGBUILD
 
-makepkg -fCrs
+makepkg -fCcrs
