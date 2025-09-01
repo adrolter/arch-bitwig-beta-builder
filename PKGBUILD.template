@@ -43,6 +43,5 @@ package(){
 	sed -i 's/Exec=bitwig-studio/Exec=bitwig-studio-beta/' usr/share/applications/com.bitwig.BitwigStudio-beta.desktop
 	sed -i 's/Icon=com.bitwig.BitwigStudio/Icon=com.bitwig.BitwigStudio-beta/' usr/share/applications/com.bitwig.BitwigStudio-beta.desktop
 
-	install -D -m644 "opt/bitwig-studio-beta/resources/icons/license_limit_warning.svg" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 	install -D -m644 "opt/bitwig-studio-beta/EULA.txt" "${pkgdir}/usr/share/licenses/${pkgname}/EULA"
 }
